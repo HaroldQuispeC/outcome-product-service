@@ -18,7 +18,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -27,9 +26,6 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
 
     @Autowired
     private OutComeAccountRepository outComeAccountRepository;
-
-    @Autowired
-    private BankAccountRepository bankAccountRepository;
 
     @Autowired
     private ClientService feingClientService;
@@ -102,7 +98,6 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
                             logger.error("No se encuentra registrado el DNI" + dni, error.getMessage());
                             return Mono.empty();
                         });
-        OutComeAccount retrieveOutComeAccount = outComeAccount.block();
 
         ArrayList<BankAccount> accounts = outComeAccount.block().getBankAccounts();
 
