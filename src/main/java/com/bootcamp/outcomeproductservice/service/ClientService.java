@@ -15,4 +15,12 @@ public interface ClientService {
     @RequestMapping(method = RequestMethod.GET, value = "/")
     @Headers("Content-Type: application/json")
     public List<Client> getAll();
+
+    @RequestMapping(method = RequestMethod.GET, value = "/findByDocument/{dni}")
+    @Headers("Content-Type: application/json")
+    public Client findByDocumenNumber(@PathVariable("dni") String dni);
+
+    @RequestMapping(method = RequestMethod.GET,value="/findByRuc/{ruc}")
+    @Headers("Content-Type: application/json")
+    public Client findByRuc(@PathVariable("ruc") String ruc);
 }
