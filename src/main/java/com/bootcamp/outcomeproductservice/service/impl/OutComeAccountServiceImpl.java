@@ -4,7 +4,6 @@ import com.bootcamp.outcomeproductservice.entity.BankAccount;
 import com.bootcamp.outcomeproductservice.entity.BankAccountOwner;
 import com.bootcamp.outcomeproductservice.entity.OutComeAccount;
 import com.bootcamp.outcomeproductservice.model.Client;
-import com.bootcamp.outcomeproductservice.repository.BankAccountRepository;
 import com.bootcamp.outcomeproductservice.repository.OutComeAccountRepository;
 import com.bootcamp.outcomeproductservice.service.ClientService;
 import com.bootcamp.outcomeproductservice.service.OutComeAccountService;
@@ -54,7 +53,6 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
             logger.info("ERROR IN REQUEST");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        //return new ResponseEntity<>(outComeAccountRepository.save(outComeAccount), HttpStatus.OK);
         return null;
     }
 
