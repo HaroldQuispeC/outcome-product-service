@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/bankAccount")
+@RequestMapping("/api/outcomes")
 public class OutComeAccountController {
 
     @Autowired
