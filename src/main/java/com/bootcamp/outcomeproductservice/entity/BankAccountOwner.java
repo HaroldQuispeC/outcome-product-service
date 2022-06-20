@@ -10,6 +10,6 @@ import lombok.Setter;
 @Setter
 public class BankAccountOwner {
 
-    private String status;
-    private Client client;
+  private String status;
+  private Client client;
 }

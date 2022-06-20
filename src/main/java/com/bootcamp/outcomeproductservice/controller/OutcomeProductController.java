@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/outcomeProduct")
 public class OutcomeProductController {
-    @GetMapping("/")
-    public String getSaludar(){
+  @GetMapping("/")
+  public String getSaludar() {
 
-        return "Hola";
-    }
+    return "Hola";
+  }
 }
