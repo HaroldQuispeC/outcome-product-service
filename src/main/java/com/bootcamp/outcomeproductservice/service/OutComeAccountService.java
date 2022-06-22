@@ -2,7 +2,9 @@ package com.bootcamp.outcomeproductservice.service;
 
 import com.bootcamp.outcomeproductservice.entity.BankAccount;
 import com.bootcamp.outcomeproductservice.entity.OutComeAccount;
+
 import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -21,12 +23,12 @@ public interface OutComeAccountService {
   ResponseEntity<Mono<OutComeAccount>> addAccountOwner(
           String dni, String ruc, String accountSerialNumber);
 
-  ResponseEntity<Mono<OutComeAccount>> addAccountSigner (
+  ResponseEntity<Mono<OutComeAccount>> addAccountSigner(
           String dni, String ruc, String accountSerialNumber
   );
 
   ResponseEntity<Mono<OutComeAccount>> addBankAccountByRuc(OutComeAccount outComeAccount);
 
-  Mono<BankAccount> findByAccountSerialNumber (String identifier, String accountSerialNumber);
+  Mono<BankAccount> findByAccountSerialNumber(String identifier, String accountSerialNumber);
 
 }

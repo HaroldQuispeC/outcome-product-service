@@ -10,12 +10,14 @@ import com.bootcamp.outcomeproductservice.repository.OutComeAccountRepository;
 import com.bootcamp.outcomeproductservice.service.ClientService;
 import com.bootcamp.outcomeproductservice.service.OutComeAccountService;
 import com.bootcamp.outcomeproductservice.utils.Constants;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -189,9 +191,9 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
       updateBankAccount.add(optBankAccount.get());
     }
 
-    OutComeAccount nOutComeAccount = saveUpdateOutcome(updateBankAccount, ruc);
+    OutComeAccount newOutComeAccount = saveUpdateOutcome(updateBankAccount, ruc);
 
-    return new ResponseEntity<>(outComeAccountRepository.save(nOutComeAccount), HttpStatus.OK);
+    return new ResponseEntity<>(outComeAccountRepository.save(newOutComeAccount), HttpStatus.OK);
   }
 
   @Override
@@ -264,8 +266,6 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
 
   public OutComeAccount addBankAccount(OutComeAccount outComeAccount) {
 
-    Flux<BankAccount> bankAccountFlux = findAccountsByRuc(outComeAccount.getIdentifier());
-    List<BankAccount> bal = bankAccountFlux.collectList().block();
     Client clientBusiness = feingClientService.findByRuc(outComeAccount.getIdentifier());
     outComeAccount.setClient(clientBusiness);
     String accountSerialNumber = Constants.INITIAL_ACCOUNT_SERIAL_NUMBER_OF_BUSINESS
@@ -286,6 +286,8 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
     ArrayList<BankAccountOwner> owners = addBankAccountOwner(retrieveClient);
     outComeAccount.getBankAccounts().get(0).setBankAccountOwners(owners);
 
+    Flux<BankAccount> bankAccountFlux = findAccountsByRuc(outComeAccount.getIdentifier());
+    List<BankAccount> bal = bankAccountFlux.collectList().block();
     BankAccount bankAccount = outComeAccount.getBankAccounts().get(0);
     bal.add(bankAccount);
     ArrayList<BankAccount> newBankAccount = new ArrayList<>(bal);
@@ -294,25 +296,25 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
     return outComeAccount;
     //
   }
-  
-  @Override
-  public Mono<BankAccount> findByAccountSerialNumber(String identifier, String accountSerialNumber){
 
+  @Override
+  public Mono<BankAccount> findByAccountSerialNumber(
+          String identifier, String accountSerialNumber) {
     BankAccount bankAccount = new BankAccount();
     int sizeIdentifier = identifier.length();
 
     if (sizeIdentifier == 8) {
-      Mono<List<BankAccount>> bAccounts = findAccountsByDni(identifier);
-      for (int i = 0; i < bAccounts.block().size(); i++) {
-        if(bAccounts.block().get(i).getAccountSerialNumber().equals(accountSerialNumber)) {
-          bankAccount =  bAccounts.block().get(i);
+      Mono<List<BankAccount>> bankAccounts = findAccountsByDni(identifier);
+      for (int i = 0; i < bankAccounts.block().size(); i++) {
+        if (bankAccounts.block().get(i).getAccountSerialNumber().equals(accountSerialNumber)) {
+          bankAccount = bankAccounts.block().get(i);
         }
       }
     } else {
-      List<BankAccount> lAccounts = findAccountsByRuc(identifier).collectList().block();
-      for (int i = 0; i < lAccounts.size(); i++) {
-        if(lAccounts.get(i).getAccountSerialNumber().equals(accountSerialNumber)) {
-          bankAccount = lAccounts.get(i);
+      List<BankAccount> listAccounts = findAccountsByRuc(identifier).collectList().block();
+      for (int i = 0; i < listAccounts.size(); i++) {
+        if (listAccounts.get(i).getAccountSerialNumber().equals(accountSerialNumber)) {
+          bankAccount = listAccounts.get(i);
         }
       }
     }
