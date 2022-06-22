@@ -27,4 +27,6 @@ public interface OutComeAccountService {
 
   ResponseEntity<Mono<OutComeAccount>> addBankAccountByRuc(OutComeAccount outComeAccount);
 
+  Mono<BankAccount> findByAccountSerialNumber (String identifier, String accountSerialNumber);
+
 }

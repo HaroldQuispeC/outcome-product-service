@@ -294,6 +294,31 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
     return outComeAccount;
     //
   }
+  
+  @Override
+  public Mono<BankAccount> findByAccountSerialNumber(String identifier, String accountSerialNumber){
+
+    BankAccount bankAccount = new BankAccount();
+    int sizeIdentifier = identifier.length();
+
+    if (sizeIdentifier == 8) {
+      Mono<List<BankAccount>> bAccounts = findAccountsByDni(identifier);
+      for (int i = 0; i < bAccounts.block().size(); i++) {
+        if(bAccounts.block().get(i).getAccountSerialNumber().equals(accountSerialNumber)) {
+          bankAccount =  bAccounts.block().get(i);
+        }
+      }
+    } else {
+      List<BankAccount> lAccounts = findAccountsByRuc(identifier).collectList().block();
+      for (int i = 0; i < lAccounts.size(); i++) {
+        if(lAccounts.get(i).getAccountSerialNumber().equals(accountSerialNumber)) {
+          bankAccount = lAccounts.get(i);
+        }
+      }
+    }
+    Mono<BankAccount> bankAccountMono = Mono.just(bankAccount);
+    return bankAccountMono;
+  }
 
   public BankAccountOwner createBankAccountOwner(Client client) {
     BankAccountOwner bao = new BankAccountOwner();
