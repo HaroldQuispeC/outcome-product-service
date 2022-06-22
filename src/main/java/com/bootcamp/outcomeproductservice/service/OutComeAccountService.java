@@ -25,4 +25,6 @@ public interface OutComeAccountService {
           String dni, String ruc, String accountSerialNumber
   );
 
+  ResponseEntity<Mono<OutComeAccount>> addBankAccountByRuc(OutComeAccount outComeAccount);
+
 }

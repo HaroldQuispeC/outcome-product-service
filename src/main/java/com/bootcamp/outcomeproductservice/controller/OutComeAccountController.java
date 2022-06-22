@@ -30,6 +30,11 @@ public class OutComeAccountController {
   @Autowired
   private OutComeAccountService outComeAccountService;
 
+  @GetMapping("/")
+  public Flux<OutComeAccount> findAllOutCome(){
+    return outComeAccountService.findAll();
+  }
+
   @CircuitBreaker(name = "clientCB", fallbackMethod = "fallBackSaveOutComeAccountByDni")
   @PostMapping("/createOutComeAccountByDni")
   public ResponseEntity<Mono<OutComeAccount>> createOutComeAccountByDni(
@@ -44,6 +49,11 @@ public class OutComeAccountController {
     return outComeAccountService.createOutComeAccountByRuc(outComeAccount);
   }
 
+  @PostMapping("/addAccountByRuc")
+  public ResponseEntity<Mono<OutComeAccount>> addAccountByRuc(
+          @RequestBody OutComeAccount outComeAccount) {
+    return outComeAccountService.addBankAccountByRuc(outComeAccount);
+  }
   //@CircuitBreaker(name = "clientCB", fallbackMethod = "fallBackGetAccounts")
   @GetMapping("/findAccountByDni/{dni}")
   public Mono<List<BankAccount>> getAccountsByDdni(@PathVariable("dni") String dni) {
