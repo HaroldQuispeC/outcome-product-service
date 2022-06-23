@@ -46,14 +46,14 @@ public class OutComeAccountController {
     return outComeAccountService.findByAccountSerialNumber(identifier, accountSerialNumber);
   }
 
-  @CircuitBreaker(name = "clientCB", fallbackMethod = "fallBackSaveOutComeAccountByDni")
+  //@CircuitBreaker(name = "client-service-cb", fallbackMethod = "fallBackSaveOutComeAccountByDni")
   @PostMapping("/createOutComeAccountByDni")
   public ResponseEntity<Mono<OutComeAccount>> createOutComeAccountByDni(
           @RequestBody OutComeAccount outComeAccount) {
     return outComeAccountService.createOutComeAccountByDni(outComeAccount);
   }
 
-  @CircuitBreaker(name = "clientCB", fallbackMethod = "fallBackSaveOutComeAccountByRuc")
+  @CircuitBreaker(name = "client-service-cb", fallbackMethod = "fallBackSaveOutComeAccountByRuc")
   @PostMapping("/createOutComeAccountByRuc")
   public ResponseEntity<Mono<OutComeAccount>> createOutComeAccountByRuc(
           @RequestBody OutComeAccount outComeAccount) {

@@ -53,13 +53,14 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
     if (outComeAccount.getIdentifier() == null) {
       throw new ModelException("Identifier is null or invalid");
     }
-    if (!outComeAccount.getClient().equals(null)) {
+    if (outComeAccount.getClient() == null
+            || outComeAccount.getClient().toString().isEmpty()) {
       logger.info("PROCESS TO CREATE OUTCOMEACCOUNTBYDNI");
       int sizeIdentifier = outComeAccount.getIdentifier().length();
 
       if (sizeIdentifier == 8) {
         logger.info("FIND CLIENT TO MS-CLIENT");
-        Client clientNaturalPerson = feingClientService.findByDocumenNumber(
+        Client clientNaturalPerson = feingClientService.findByDocumentNumber(
                 outComeAccount.getIdentifier());
         if (!clientNaturalPerson.equals("")) {
           String accountSerialNumber = Constants.INITIAL_ACCOUNT_SERIAL_NUMBER_OF_CLIENT
@@ -124,7 +125,7 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
                 .setCvv(generateCvvDebitCard());
 
         String dni = outComeAccount.getIdentifier().substring(2, 10);
-        Client retrieveClient = feingClientService.findByDocumenNumber(dni);
+        Client retrieveClient = feingClientService.findByDocumentNumber(dni);
 
         ArrayList<BankAccountOwner> owners = addBankAccountOwner(retrieveClient);
         outComeAccount.getBankAccounts().get(0).setBankAccountOwners(owners);
@@ -178,7 +179,7 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
               return Mono.empty();
             });
 
-    Client retrieveClient = feingClientService.findByDocumenNumber(dni);
+    Client retrieveClient = feingClientService.findByDocumentNumber(dni);
     BankAccountOwner bao = createBankAccountOwner(retrieveClient);
     ArrayList<BankAccountOwner> baOwner = bankAccountMono.block().getBankAccountOwners();
     baOwner.add(bao);
@@ -207,7 +208,7 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
               return Mono.empty();
             });
 
-    Client retrieveClient = feingClientService.findByDocumenNumber(dni);
+    Client retrieveClient = feingClientService.findByDocumentNumber(dni);
     BankAccountSigner bas = createBankAccountSigner(retrieveClient);
     ArrayList<BankAccountSigner> baSigner = bankAccountMono.block().getBankAccountSigners();
     baSigner.add(bas);
@@ -231,6 +232,12 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
     return new ResponseEntity<>(saveAccount, HttpStatus.OK);
   }
 
+  /**
+   * saveUpdateOutcome.
+   * @param bankAccounts ArrayList
+   * @param ruc String
+   * @return OutComeAccount
+   */
   public OutComeAccount saveUpdateOutcome(ArrayList<BankAccount> bankAccounts, String ruc) {
     OutComeAccount newOutComeAccount = new OutComeAccount();
 
@@ -246,6 +253,11 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
     return newOutComeAccount;
   }
 
+  /**
+   * getOutComeAccount.
+   * @param ruc String
+   * @return Mono OutComeAccount
+   */
   public Mono<OutComeAccount> getOutComeAccount(String ruc) {
     Mono<OutComeAccount> accountMono = outComeAccountRepository.findAll()
             .filter(account -> account.getIdentifier().equals(ruc)).take(1).single();
@@ -253,6 +265,11 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
     return accountMono;
   }
 
+  /**
+   * addBankAccountOwner.
+   * @param client Client
+   * @return ArrayList BankAccountOwner
+   */
   public ArrayList<BankAccountOwner> addBankAccountOwner(Client client) {
 
     ArrayList<BankAccountOwner> owners = new ArrayList<>();
@@ -264,6 +281,11 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
     return owners;
   }
 
+  /**
+   * addBankAccount.
+   * @param outComeAccount OutComeAccount
+   * @return OutComeAccount
+   */
   public OutComeAccount addBankAccount(OutComeAccount outComeAccount) {
 
     Client clientBusiness = feingClientService.findByRuc(outComeAccount.getIdentifier());
@@ -282,7 +304,7 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
             .setCvv(generateCvvDebitCard());
 
     String dni = outComeAccount.getIdentifier().substring(2, 10);
-    Client retrieveClient = feingClientService.findByDocumenNumber(dni);
+    Client retrieveClient = feingClientService.findByDocumentNumber(dni);
     ArrayList<BankAccountOwner> owners = addBankAccountOwner(retrieveClient);
     outComeAccount.getBankAccounts().get(0).setBankAccountOwners(owners);
 
@@ -297,6 +319,12 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
     //
   }
 
+  /**
+   * findByAccountSerialNumber.
+   * @param identifier String
+   * @param accountSerialNumber String
+   * @return Mono BankAccount
+   */
   @Override
   public Mono<BankAccount> findByAccountSerialNumber(
           String identifier, String accountSerialNumber) {
@@ -322,6 +350,11 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
     return bankAccountMono;
   }
 
+  /**
+   * createBankAccountOwner.
+   * @param client Client
+   * @return BankAccountOwner
+   */
   public BankAccountOwner createBankAccountOwner(Client client) {
     BankAccountOwner bao = new BankAccountOwner();
     bao.setStatus("ACTIVE");
@@ -329,6 +362,11 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
     return bao;
   }
 
+  /**
+   * createBankAccountSigner.
+   * @param client Client
+   * @return BankAccountSigner
+   */
   public BankAccountSigner createBankAccountSigner(Client client) {
     BankAccountSigner bas = new BankAccountSigner();
     bas.setStatus("ACTIVE");
@@ -336,27 +374,44 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
     return bas;
   }
 
+  /**
+   * validateOutComeAccountType.
+   * @param outComeAccount OutComeAccount
+   * @return boolean
+   */
   public boolean validateOutComeAccountType(OutComeAccount outComeAccount) {
     if (outComeAccount.getBankAccounts().get(0).getOutComeAccountType()
-            .getIdOutComeAccountType().equals(2)) {
+            .getIdOutComeAccountType().equals("2")) {
       return true;
     } else {
       return false;
     }
   }
 
+  /**
+   * generateAccountNumber.
+   * @return String
+   */
   public String generateAccountNumber() {
     int randomNumber = ThreadLocalRandom.current().nextInt(0, 999999999);
     String number = String.valueOf(randomNumber);
     return number;
   }
 
+  /**
+   * generateDebitCardNumber.
+   * @return String
+   */
   public String generateDebitCardNumber() {
     int randomNumber = ThreadLocalRandom.current().nextInt(0, 99999999);
     String response = String.valueOf(randomNumber);
     return response;
   }
 
+  /**
+   * expirationDateOfDebitCard.
+   * @return String
+   */
   public String expirationDateOfDebitCard() {
     LocalDate dt = LocalDate.now().plusYears(5);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/YY");
@@ -365,6 +420,10 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
     return response;
   }
 
+  /**
+   * generateCvvDebitCard.
+   * @return String
+   */
   public String generateCvvDebitCard() {
     int randomNumber = ThreadLocalRandom.current().nextInt(100, 999);
     String response = String.valueOf(randomNumber);
