@@ -12,13 +12,19 @@ import reactor.core.publisher.Mono;
 public interface OutComeAccountService {
   Flux<OutComeAccount> findAll();
 
+  Mono<OutComeAccount> saveOutComeAccount(OutComeAccount outComeAccount);
+
   ResponseEntity<Mono<OutComeAccount>> createOutComeAccountByDni(OutComeAccount outComeAccount);
 
   ResponseEntity<Mono<OutComeAccount>> createOutComeAccountByRuc(OutComeAccount outComeAccount);
 
   Mono<List<BankAccount>> findAccountsByDni(String dni);
 
+  Mono<OutComeAccount> getOutComeAccountByDni(String dni);
+
   Flux<BankAccount> findAccountsByRuc(String ruc);
+
+  Mono<OutComeAccount> getOutComeAccountByRuc(String ruc);
 
   ResponseEntity<Mono<OutComeAccount>> addAccountOwner(
           String dni, String ruc, String accountSerialNumber);

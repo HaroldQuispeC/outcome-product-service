@@ -38,6 +38,11 @@ public class OutComeAccountController {
     return outComeAccountService.findAll();
   }
 
+  @PostMapping("/save")
+  public Mono<OutComeAccount> saveOutAccount(@RequestBody OutComeAccount outComeAccount) {
+    return outComeAccountService.saveOutComeAccount(outComeAccount);
+  }
+
   @GetMapping("/findByAccountSerialNumber")
   public Mono<BankAccount> findAccountByAccountSerialNumber(
           @RequestParam(value = "identifier", required = true) String identifier,
@@ -64,6 +69,16 @@ public class OutComeAccountController {
   public ResponseEntity<Mono<OutComeAccount>> addAccountByRuc(
           @RequestBody OutComeAccount outComeAccount) {
     return outComeAccountService.addBankAccountByRuc(outComeAccount);
+  }
+
+  @GetMapping("/getOutComeAccountByDni/{dni}")
+  public Mono<OutComeAccount> findOutComeAccountByDni(@PathVariable("dni") String dni) {
+    return outComeAccountService.getOutComeAccountByDni(dni);
+  }
+
+  @GetMapping("/getOutComeAccountByRuc/{ruc}")
+  public Mono<OutComeAccount> findOutComeAccountByRuc(@PathVariable("ruc") String ruc) {
+    return outComeAccountService.getOutComeAccountByDni(ruc);
   }
 
   //@CircuitBreaker(name = "clientCB", fallbackMethod = "fallBackGetAccounts")

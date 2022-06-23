@@ -43,6 +43,11 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
   }
 
   @Override
+  public Mono<OutComeAccount> saveOutComeAccount(OutComeAccount outComeAccount) {
+    return outComeAccountRepository.save(outComeAccount);
+  }
+
+  @Override
   public ResponseEntity<Mono<OutComeAccount>> createOutComeAccountByDni(
           OutComeAccount outComeAccount) {
 
@@ -156,6 +161,13 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
   }
 
   @Override
+  public Mono<OutComeAccount> getOutComeAccountByDni(String dni) {
+    Mono<OutComeAccount> accountMono = outComeAccountRepository.findAll()
+            .filter(outComeAccount -> outComeAccount.getIdentifier().equals(dni)).take(1).single();
+    return accountMono;
+  }
+
+  @Override
   public Flux<BankAccount> findAccountsByRuc(String ruc) {
     Mono<OutComeAccount> outComeAccounts = outComeAccountRepository.findAll()
             .filter(outCome -> outCome.getIdentifier()
@@ -234,14 +246,15 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
 
   /**
    * saveUpdateOutcome.
+   *
    * @param bankAccounts ArrayList
-   * @param ruc String
+   * @param ruc          String
    * @return OutComeAccount
    */
   public OutComeAccount saveUpdateOutcome(ArrayList<BankAccount> bankAccounts, String ruc) {
     OutComeAccount newOutComeAccount = new OutComeAccount();
 
-    Mono<OutComeAccount> outCome = getOutComeAccount(ruc);
+    Mono<OutComeAccount> outCome = getOutComeAccountByRuc(ruc);
 
     Optional<OutComeAccount> optComeAccount = Optional.ofNullable(outCome.block());
 
@@ -253,12 +266,8 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
     return newOutComeAccount;
   }
 
-  /**
-   * getOutComeAccount.
-   * @param ruc String
-   * @return Mono OutComeAccount
-   */
-  public Mono<OutComeAccount> getOutComeAccount(String ruc) {
+  @Override
+  public Mono<OutComeAccount> getOutComeAccountByRuc(String ruc) {
     Mono<OutComeAccount> accountMono = outComeAccountRepository.findAll()
             .filter(account -> account.getIdentifier().equals(ruc)).take(1).single();
 
@@ -267,6 +276,7 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
 
   /**
    * addBankAccountOwner.
+   *
    * @param client Client
    * @return ArrayList BankAccountOwner
    */
@@ -283,6 +293,7 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
 
   /**
    * addBankAccount.
+   *
    * @param outComeAccount OutComeAccount
    * @return OutComeAccount
    */
@@ -321,7 +332,8 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
 
   /**
    * findByAccountSerialNumber.
-   * @param identifier String
+   *
+   * @param identifier          String
    * @param accountSerialNumber String
    * @return Mono BankAccount
    */
@@ -352,6 +364,7 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
 
   /**
    * createBankAccountOwner.
+   *
    * @param client Client
    * @return BankAccountOwner
    */
@@ -364,6 +377,7 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
 
   /**
    * createBankAccountSigner.
+   *
    * @param client Client
    * @return BankAccountSigner
    */
@@ -376,6 +390,7 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
 
   /**
    * validateOutComeAccountType.
+   *
    * @param outComeAccount OutComeAccount
    * @return boolean
    */
@@ -390,6 +405,7 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
 
   /**
    * generateAccountNumber.
+   *
    * @return String
    */
   public String generateAccountNumber() {
@@ -400,6 +416,7 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
 
   /**
    * generateDebitCardNumber.
+   *
    * @return String
    */
   public String generateDebitCardNumber() {
@@ -410,6 +427,7 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
 
   /**
    * expirationDateOfDebitCard.
+   *
    * @return String
    */
   public String expirationDateOfDebitCard() {
@@ -422,6 +440,7 @@ public class OutComeAccountServiceImpl implements OutComeAccountService {
 
   /**
    * generateCvvDebitCard.
+   *
    * @return String
    */
   public String generateCvvDebitCard() {
