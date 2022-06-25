@@ -4,10 +4,8 @@ import com.bootcamp.outcomeproductservice.entity.BankAccount;
 import com.bootcamp.outcomeproductservice.entity.OutComeAccount;
 import com.bootcamp.outcomeproductservice.service.OutComeAccountService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

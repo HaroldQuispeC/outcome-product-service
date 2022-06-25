@@ -10,14 +10,12 @@ import com.bootcamp.outcomeproductservice.repository.OutComeAccountRepository;
 import com.bootcamp.outcomeproductservice.service.ClientService;
 import com.bootcamp.outcomeproductservice.service.OutComeAccountService;
 import com.bootcamp.outcomeproductservice.utils.Constants;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

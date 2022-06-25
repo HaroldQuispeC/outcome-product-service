@@ -3,15 +3,12 @@ package com.bootcamp.outcomeproductservice.service;
 import com.bootcamp.outcomeproductservice.exceptions.ModelException;
 import com.bootcamp.outcomeproductservice.model.Client;
 import feign.Headers;
-
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-//@FeignClient(value = "client",
-//        url = "http://localhost:8081/api/client")
 @FeignClient(name = "GATEWAY-SERVICE/api/client",
         fallback = ClientService.ClientServiceFallback.class)
 public interface ClientService {

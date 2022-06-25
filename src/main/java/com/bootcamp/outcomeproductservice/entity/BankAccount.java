@@ -1,11 +1,9 @@
 package com.bootcamp.outcomeproductservice.entity;
 
 import java.util.ArrayList;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 @NoArgsConstructor
 @AllArgsConstructor
